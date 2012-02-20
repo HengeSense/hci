@@ -1,0 +1,15 @@
+<h3>Hello <%= current_user.name %></h3>
+<ul>
+  <li><%= link_to "Send money",    new_transaction_path %></li>
+  <li><%= link_to "Request money", new_invoice_path %></li>
+  <li><%= link_to "View account", user_path(current_user) %></li>  
+  <li><%= link_to "Edit account", edit_user_registration_path %></li>
+</ul>
+<div class='row'>
+  <div class='span12 well'>
+    <%= render :template => 'users/index' %>
+  </div>
+  <div id="transactions" class='span12 well'>
+    <%= render :template => 'transactions/index' %>
+  </div>
+</div>

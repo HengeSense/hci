@@ -1,14 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hci</title>
+  <title>HCI</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
-<%= yield %>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">      
+    <div class="container">
+      <ul class="nav">
+        <a href='/' class='brand'>HCI</a>
+      </ul>
+      <ul class="nav pull-right">
+        <% if user_signed_in? %>
+          <li><p class="signed-in-as">Signed in as: <%= current_user.email %></p></li>
+          <li><%= link_to "Sign out", destroy_user_session_path, :method => 'delete' %></li>
+        <% else %>
+          <li><%= link_to "New User", new_user_registration_path %></li>
+          <li><%= link_to "User sign in", new_user_session_path %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+<div id="content" class="container">
+  <%= render :partial => 'shared/flash_messages', :locals => {:flash => flash } %>
+  <%= yield %>
+</div> 
 
 </body>
 </html>

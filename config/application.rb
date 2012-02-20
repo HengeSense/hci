@@ -52,6 +52,9 @@ module Hci
 
     # Enable the asset pipeline
     config.assets.enabled = true
+    
+    # Force the application to not access the DB or load models when precompiling for heroku
+    config.assets.initialize_on_precompile = false
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'

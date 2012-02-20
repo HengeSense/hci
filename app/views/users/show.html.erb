@@ -1,0 +1,17 @@
+<p>
+  <b>User:</b>
+  <%= @user.email %>
+</p>
+<p>
+  <b>id:</b>
+  <%= @user.id %>
+</p>
+
+<ul>
+  <li><%= link_to "View #{@user.name}'s bills", user_bills_path %></li>
+  <li><%= link_to "View #{@user.name}'s invoices", user_invoices_path %></li>
+  <li><%= link_to 'Back', users_path %></li>
+</ul>
+
+
+

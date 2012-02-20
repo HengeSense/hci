@@ -1,4 +1,18 @@
 Hci::Application.routes.draw do
+  resources :transactions
+  
+  devise_for :users
+  devise_scope :user do
+    match "/users/:id/bills" => "users#bills", :as => 'user_bills', :via => :get
+    match "/users/:id/invoices" => "users#invoices", :as => 'user_invoices', :via => :get
+  end
+  
+  match "/invoices/new" => "transactions#newInvoice", :as => "new_invoice", :via => :get
+  match "/invoices" => "transactions#createInvoice", :via => :post
+  
+  resources :users, :only => [:show, :index]
+  
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -48,7 +62,7 @@ Hci::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+  root :to => 'pages#index'
 
   # See how all your routes lay out with "rake routes"
 

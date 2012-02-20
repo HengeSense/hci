@@ -1,0 +1,16 @@
+<h2><%= @user.name %>'s Invoices</h2>
+<h3>Unpaid Invoices</h3>
+<% if @unpaidInvoices.count > 0 %>
+  <%= render :partial => 'transactions/transaction', :object => @unpaidInvoices %>
+<% else %>
+  <p><%= @user.name %> has no unpaid Invoices!</p>
+<% end %>
+
+<h3>Paid Invoices</h3>
+<% if @paidInvoices.count > 0 %>
+<%= render :partial => 'transactions/transaction', :object => @paidInvoices %>
+<% else %>
+  <p>No Invoices</p>
+<% end %>
+
+<%= link_to 'Back', user_path %>

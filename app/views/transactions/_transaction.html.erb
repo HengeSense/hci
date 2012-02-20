@@ -1,0 +1,25 @@
+<table class="table table-striped">
+  <tr>
+    <th>Description</th>
+    <th>Amount</th>
+    <th>Complete</th>
+    <th>Sender ID</th>
+    <th>Recipient ID</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% transaction.each do |transaction| %>
+  <tr>
+    <td><%= transaction.description %></td>
+    <td>$<%= transaction.amount %></td>
+    <td><%= transaction.complete %></td>    
+    <td><%= transaction.sender_id %></td>
+    <td><%= transaction.recipient_id %></td>
+    <td><%= link_to 'Show', transaction %></td>
+    <td><%= link_to 'Edit', edit_transaction_path(transaction) %></td>
+    <td><%= link_to 'Destroy', transaction, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
