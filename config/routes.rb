@@ -4,7 +4,11 @@ Hci::Application.routes.draw do
   devise_for :users
   devise_scope :user do
     match "/users/:id/bills" => "users#bills", :as => 'user_bills', :via => :get
+    match "/users/:id/unpaidbills" => "users#unpaidbills", :as => 'user_unpaidbills', :via => :get
     match "/users/:id/invoices" => "users#invoices", :as => 'user_invoices', :via => :get
+    match "/users/:id/unpaidinvoices" => "users#unpaidinvoices", :as => 'user_unpaidinvoices', :via => :get    
+    match "/users/:id/unpaidTransactions" => "users#unpaidTransactions", :as => 'user_unpaidTransactions', :via => :get
+    match "/users/:id/paidTransactions" => "users#paidTransactions", :as => 'user_paidTransactions', :via => :get
   end
   
   match "/invoices/new" => "transactions#newInvoice", :as => "new_invoice", :via => :get
