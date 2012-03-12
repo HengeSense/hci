@@ -14,3 +14,9 @@ doc/
 *~
 .project
 .DS_Store
+
+# Ignore amazon s3 keys
+.env
+
+# Ignore procfile run by foreman
+.Procfile

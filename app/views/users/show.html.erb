@@ -2,6 +2,9 @@
   <b>User:</b>
   <%= @user.email %>
 </p>
+<div>
+  <%= image_tag @user.avatar.url(:medium) %>
+</div>
 <p>
   <b>id:</b>
   <%= @user.id %>

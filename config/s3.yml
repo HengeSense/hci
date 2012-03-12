@@ -1,0 +1,12 @@
+development:
+  bucket: simpleMoney-dev
+  access_key_id: ENV['S3_KEY']
+  secret_access_key: ENV['S3_SECRET']
+test:
+  bucket: simpleMoney-dev
+  access_key_id: ENV['S3_KEY']
+  secret_access_key: ENV['S3_SECRET']
+production:
+  bucket: simpleMoney
+  access_key_id: ENV['S3_KEY']
+  secret_access_key: ENV['S3_SECRET']

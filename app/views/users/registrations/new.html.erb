@@ -1,7 +1,15 @@
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :multipart => true })  do |f| %>
   <%= devise_error_messages! %>
   <fieldset>
     <legend>Sign up</legend>
+    
+    <div class="control-group">
+      <%= f.label :avatar %>
+      <div class="controls">
+        <%= f.file_field :avatar %>
+      </div>
+    </div>
+    
     <div class="control-group">
       <%= f.label :email %>
       <div class="controls">

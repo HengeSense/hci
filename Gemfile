@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.1'
 gem 'devise'
+gem "paperclip", "~> 2.7"
+gem 'aws-sdk', '~> 1.3.4'
 
 group :development do
   gem 'sqlite3'
