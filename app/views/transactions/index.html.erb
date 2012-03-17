@@ -15,8 +15,8 @@
 <% @transactions.each do |transaction| %>
   <tr>
     <td>$<%= transaction.amount %></td>
-    <td><%= transaction.sender_id %></td>
-    <td><%= transaction.recipient_id %></td>
+    <td><%= transaction.sender_email %></td>
+    <td><%= transaction.recipient_email %></td>
     <td><%= transaction.complete %></td>
     <td><%= transaction.description %></td>
     <td><%= link_to 'Show', transaction %></td>

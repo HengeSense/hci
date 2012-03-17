@@ -17,26 +17,36 @@ class UsersController < ApplicationController
   
   def bills
     @user = User.find(params[:id])
-    @unpaidBills = @user.bills.where("complete = ?", false)
+    @bills = @user.bills
+    respond_with(@bills)
+  end
+  
+  def paidBills
+    @user = User.find(params[:id])
     @paidBills = @user.bills.where("complete = ?", true)
     respond_with(@paidBills)
   end
   
-  def unpaidbills
+  def unpaidBills
     @user = User.find(params[:id])
     @unpaidBills = @user.bills.where("complete = ?", false)
     respond_with(@unpaidBills)
   end
   
-  def unpaidinvoices
+  def invoices
+    @user = User.find(params[:id])
+    @invoices = @user.invoices
+    respond_with(@invoices)
+  end
+  
+  def unpaidInvoices
     @user = User.find(params[:id])
     @unpaidInvoices = @user.invoices.where("complete = ?", false)
     respond_with(@unpaidInvoices)
   end
   
-  def invoices
+  def paidInvoices
     @user = User.find(params[:id])
-    @unpaidInvoices = @user.invoices.where("complete = ?", false)
     @paidInvoices = @user.invoices.where("complete = ?", true)
     respond_with(@paidInvoices)
   end

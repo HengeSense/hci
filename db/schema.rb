@@ -34,14 +34,17 @@ ActiveRecord::Schema.define(:version => 20120311235805) do
   add_index "merchants", ["reset_password_token"], :name => "index_merchants_on_reset_password_token", :unique => true
 
   create_table "transactions", :force => true do |t|
-    t.decimal  "amount",       :precision => 8, :scale => 2
-    t.integer  "sender_id"
-    t.integer  "recipient_id"
+    t.decimal  "amount",          :precision => 8, :scale => 2
+    t.string   "sender_email"
+    t.string   "recipient_email"
     t.boolean  "complete"
     t.string   "description"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
   end
+
+  add_index "transactions", ["recipient_email"], :name => "index_transactions_on_recipient_email"
+  add_index "transactions", ["sender_email"], :name => "index_transactions_on_sender_email"
 
   create_table "users", :force => true do |t|
     t.string   "email",                                                :default => "",  :null => false

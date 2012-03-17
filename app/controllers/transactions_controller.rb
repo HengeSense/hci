@@ -13,8 +13,8 @@ class TransactionsController < ApplicationController
   # GET /transactions/1.json
   def show
     @transaction = Transaction.find(params[:id])
-    @sender = User.find(@transaction.sender_id)
-    @recipient = User.find(@transaction.recipient_id)    
+    @sender = User.find_by_email(@transaction.sender_email)
+    @recipient = User.find_by_email(@transaction.recipient_email)    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @transaction }
@@ -30,7 +30,7 @@ class TransactionsController < ApplicationController
       format.json { render json: @transaction }
     end
   end
-  
+
   def newInvoice
     @transaction = Transaction.new
     respond_to do |format|
@@ -38,7 +38,7 @@ class TransactionsController < ApplicationController
       format.json { render json: @transaction }
     end
   end
-  
+
   def createInvoice
     @transaction = current_user.invoices.build(params[:transaction])
     respond_to do |format|
@@ -76,7 +76,7 @@ class TransactionsController < ApplicationController
   # PUT /transactions/1.json
   def update
     @transaction = Transaction.find(params[:id])
-    @transaction.sender_id = current_user.id
+    @transaction.sender_email = current_user.email
     respond_to do |format|
       if @transaction.update_attributes(params[:transaction])
         format.html { redirect_to @transaction, notice: 'Transaction was successfully updated.' }

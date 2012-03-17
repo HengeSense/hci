@@ -8,8 +8,8 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :avatar, :name, :email, :password, :password_confirmation, :remember_me
   
-  has_many :bills, :class_name => 'Transaction', :foreign_key => :sender_id
-  has_many :invoices, :class_name => 'Transaction', :foreign_key => :recipient_id
+  has_many :bills, :class_name => 'Transaction', :foreign_key => "sender_email", :primary_key => "email"
+  has_many :invoices, :class_name => 'Transaction', :foreign_key => "recipient_email", :primary_key => "email"
   
   has_attached_file :avatar, 
                     :storage => :s3,
@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
     result = super((options || {}).merge(:except => [ :avatar_updated_at, :avatar_content_type, :avatar_file_name, :avatar_file_size ]))
     result[:avatar_url] = self.avatar.url(:medium)
     result[:avatar_url_small] = self.avatar.url(:small)
+    result[:transactions] = self.invoices+self.bills
     result
   end
   private

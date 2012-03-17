@@ -3,8 +3,8 @@
     <th>Description</th>
     <th>Amount</th>
     <th>Complete</th>
-    <th>Sender ID</th>
-    <th>Recipient ID</th>
+    <th>Sender Email</th>
+    <th>Recipient Email</th>
     <th></th>
     <th></th>
     <th></th>
@@ -15,8 +15,8 @@
     <td><%= transaction.description %></td>
     <td>$<%= transaction.amount %></td>
     <td><%= transaction.complete %></td>    
-    <td><%= transaction.sender_id %></td>
-    <td><%= transaction.recipient_id %></td>
+    <td><%= transaction.sender_email %></td>
+    <td><%= transaction.recipient_email %></td>
     <td><%= link_to 'Show', transaction %></td>
     <td><%= link_to 'Edit', edit_transaction_path(transaction) %></td>
     <td><%= link_to 'Destroy', transaction, confirm: 'Are you sure?', method: :delete %></td>
