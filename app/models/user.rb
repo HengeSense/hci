@@ -26,13 +26,21 @@ class User < ActiveRecord::Base
                     }
                     
   # Overriding serializable_hash to pass extra JSON we need in our iOS app
-  def serializable_hash(options = {})
+  def as_json(options = {})
     result = super((options || {}).merge(:except => [ :avatar_updated_at, :avatar_content_type, :avatar_file_name, :avatar_file_size ]))
     result[:avatar_url] = self.avatar.url(:medium)
     result[:avatar_url_small] = self.avatar.url(:small)
     result[:transactions] = self.invoices+self.bills
     result
   end
+  
+  def serializable_hash(options = {})
+    result = super((options || {}).merge(:except => [ :avatar_updated_at, :avatar_content_type, :avatar_file_name, :avatar_file_size ]))
+    result[:avatar_url] = self.avatar.url(:medium)
+    result[:avatar_url_small] = self.avatar.url(:small)
+    result
+  end
+  
   private
     def setBalance
       self.balance = 500.00;
