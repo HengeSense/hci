@@ -30,7 +30,10 @@ class User < ActiveRecord::Base
     result = super((options || {}).merge(:except => [ :avatar_updated_at, :avatar_content_type, :avatar_file_name, :avatar_file_size ]))
     result[:avatar_url] = self.avatar.url(:medium)
     result[:avatar_url_small] = self.avatar.url(:small)
-    result[:transactions] = self.invoices+self.bills
+    a = self.invoices
+    b = self.bills
+    transactions = (a+b).sort!{|a,b|a.created_at <=> b.created_at}
+    result[:transactions] = transactions.reverse()
     result
   end
   
@@ -41,8 +44,22 @@ class User < ActiveRecord::Base
     result
   end
   
+  def increaseBalance(amount)
+    logger.debug('increasing balance')    
+    self.balance += amount
+    logger.debug(self.balance)
+    self.save
+  end
+  
+  def decreaseBalance(amount)
+    logger.debug('decreasing balance')
+    self.balance -= amount
+    logger.debug(self.balance)
+    self.save
+  end
+  
   private
     def setBalance
-      self.balance = 500.00;
+      self.balance = 500.00
     end
 end

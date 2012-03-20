@@ -1,4 +1,5 @@
 class TransactionsController < ApplicationController
+  respond_to :json, :html
   # GET /transactions
   # GET /transactions.json
   def index
@@ -40,9 +41,10 @@ class TransactionsController < ApplicationController
   end
 
   def createInvoice
+    @sender = User.find_by_email(params[:transaction][:sender_email])
     @transaction = current_user.invoices.build(params[:transaction])
     respond_to do |format|
-      if @transaction.save
+      if @sender and @sender != current_user and @transaction.save
         format.html { redirect_to @transaction, notice: 'Invoice successfully sent!' }
         format.json { render json: @transaction, status: :created, location: @transaction }
       else
@@ -60,9 +62,12 @@ class TransactionsController < ApplicationController
   # POST /transactions
   # POST /transactions.json
   def create
+    @recipient = User.find_by_email(params[:transaction][:recipient_email])
     @transaction = current_user.bills.build(params[:transaction])
+    @amount = params[:transaction][:amount].to_d
     respond_to do |format|
-      if @transaction.save
+      if @recipient and @recipient != current_user and @transaction.save
+        current_user.decreaseBalance(@amount)
         format.html { redirect_to @transaction, notice: 'Money successfully sent!' }
         format.json { render json: @transaction, status: :created, location: @transaction }
       else
@@ -76,9 +81,18 @@ class TransactionsController < ApplicationController
   # PUT /transactions/1.json
   def update
     @transaction = Transaction.find(params[:id])
-    @transaction.sender_email = current_user.email
+    @sender = User.find_by_email(@transaction.sender_email)
+    @recipient = User.find_by_email(@transaction.recipient_email)
+    @amount = params[:transaction][:amount].to_d
     respond_to do |format|
       if @transaction.update_attributes(params[:transaction])
+        if @sender == current_user
+          current_user.decreaseBalance(@amount)
+        elsif @sender == current_user
+          current_user.increaseBalance(@amount)
+        else
+          logger.debug @sender
+        end
         format.html { redirect_to @transaction, notice: 'Transaction was successfully updated.' }
         format.json { head :no_content }
       else
