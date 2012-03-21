@@ -68,6 +68,7 @@ class TransactionsController < ApplicationController
     respond_to do |format|
       if @recipient and @recipient != current_user and @transaction.save
         current_user.decreaseBalance(@amount)
+        @recipient.increaseBalance(@amount)
         format.html { redirect_to @transaction, notice: 'Money successfully sent!' }
         format.json { render json: @transaction, status: :created, location: @transaction }
       else
@@ -88,6 +89,7 @@ class TransactionsController < ApplicationController
       if @transaction.update_attributes(params[:transaction])
         if @sender == current_user
           current_user.decreaseBalance(@amount)
+          @recipient.increaseBalance(@amount)
         elsif @sender == current_user
           current_user.increaseBalance(@amount)
         else
