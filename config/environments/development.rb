@@ -21,6 +21,19 @@ Hci::Application.configure do
   
   # Send emails in development
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :enable_starttls_auto => true,  
+    :address            => 'smtp.gmail.com',
+    :port               => 587,
+    :tls                  => true,
+    :domain             => 'gmail.com', #you can also use google.com
+    :authentication     => :plain,
+    :user_name          => 'hcirobot@gmail.com',
+    :password           => 'zenRobot747'
+  }
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin

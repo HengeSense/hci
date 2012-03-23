@@ -4,6 +4,7 @@ gem 'rails', '3.2.1'
 gem 'devise'
 gem "paperclip", "~> 2.7"
 gem 'aws-sdk', '~> 1.3.4'
+gem 'tlsmail'
 
 
 group :development do

@@ -1,4 +1,5 @@
 class TransactionsController < ApplicationController
+#  before_filter :authenticate_user!
   respond_to :json, :html
   # GET /transactions
   # GET /transactions.json
@@ -65,6 +66,7 @@ class TransactionsController < ApplicationController
     @recipient = User.find_by_email(params[:transaction][:recipient_email])
     @transaction = current_user.bills.build(params[:transaction])
     @amount = params[:transaction][:amount].to_d
+    logger.debug @recipient
     respond_to do |format|
       if @recipient and @recipient != current_user and @transaction.save
         current_user.decreaseBalance(@amount)
