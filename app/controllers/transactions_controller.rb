@@ -84,7 +84,7 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.find(params[:id])
     @sender = User.find_by_email(@transaction.sender_email)
     @recipient = User.find_by_email(@transaction.recipient_email)
-    @amount = params[:transaction][:amount].to_d
+    @amount = @transaction.amount.to_d
     respond_to do |format|
       if @transaction.update_attributes(params[:transaction])
         if @sender == current_user
@@ -96,7 +96,7 @@ class TransactionsController < ApplicationController
           logger.debug @sender
         end
         format.html { redirect_to @transaction, notice: 'Transaction was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json: @transaction, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @transaction.errors, status: :unprocessable_entity }
