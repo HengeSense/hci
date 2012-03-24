@@ -18,7 +18,7 @@ Hci::Application.routes.draw do
   match "/invoices/new" => "transactions#newInvoice", :as => "new_invoice", :via => :get
   match "/invoices" => "transactions#createInvoice", :via => :post
   
-  resources :users, :only => [:show, :index, :edit]
+  resources :users, :only => [:show, :index]
   
   if Rails.env.development?
     mount UserMailer::Preview => 'mail_view'

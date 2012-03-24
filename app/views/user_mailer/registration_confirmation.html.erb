@@ -116,18 +116,16 @@
 			  <img src="http://severe-leaf-6733.herokuapp.com/assets/emailheader.png"></img>
 			<table width="100%" cellpadding="0" cellspacing="0" border="0">
 			<tr>
-        <td bgcolor="#ffffff" nowrap><img border="0" src="images/spacer.gif" width="20" height="1"><img src="<%= @senderAvatar  %>" style="margin-top:-10px; box-shadow: 0px 2px 2px grey;"></img></td>
+        <td bgcolor="#ffffff" nowrap><img border="0" src="images/spacer.gif" width="20" height="1"></td>
 				<td width="100%" bgcolor="#ffffff">
 			
 					<table width="100%" cellpadding="20" cellspacing="0" border="0">
 					<tr>
 						<td bgcolor="#ffffff" class="contentblock">
 
-							<h4 class="secondary"><strong><singleline label="Title"><%= @sender.name %> just sent you $<%= @transaction.amount %>!</singleline></strong></h4>
+							<h4 class="secondary"><strong><singleline label="Title">Welcome to SimpleMoney</singleline></strong></h4>
 							<multiline label="Description">
-							  <p style="margin-top:0; margin-bottom:0;"><%= @transaction.created_at.to_formatted_s(:long_ordinal) %></p>
-                <p style="margin-top:0; margin-bottom:10px;">Description: <%= @transaction.description %></p>
-							  <p style="margin-bottom:-10px;"><%= link_to "Sign In", new_user_session_url(:email => @recipientEmail) %> or <%= link_to "Sign up", new_user_registration_url(:email => @recipientEmail) %> to accept this payment.</p>
+							  <p style="margin-top:0; margin-bottom:0;">Thanks for signing up for SimpleMoney! You can start by setting up your <%= link_to "profile", edit_user_registration_url(@user) %></p>
 							  </multiline>
 
 						</td>

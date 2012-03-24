@@ -1,5 +1,6 @@
 Hci::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
+  config.action_controller.asset_host = "severe-leaf-6733.herokuapp.com"
   config.action_mailer.default_url_options = { :host => 'severe-leaf-6733.herokuapp.com' }
   config.action_mailer.delivery_method = :smtp
   ActionMailer::Base.smtp_settings = {
