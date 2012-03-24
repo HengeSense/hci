@@ -15,8 +15,6 @@ class TransactionsController < ApplicationController
   # GET /transactions/1.json
   def show
     @transaction = Transaction.find(params[:id])
-    @sender = User.find_by_email(@transaction.sender_email)
-    @recipient = User.find_by_email(@transaction.recipient_email)    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @transaction }
@@ -71,6 +69,11 @@ class TransactionsController < ApplicationController
       if @recipient and @recipient != current_user and @transaction.save
         current_user.decreaseBalance(@amount)
         @recipient.increaseBalance(@amount)
+        format.html { redirect_to @transaction, notice: 'Money successfully sent!' }
+        format.json { render json: @transaction, status: :created, location: @transaction }
+      elsif !@recipient and @recipient != current_user and @transaction.save
+        current_user.decreaseBalance(@amount)
+        UserMailer.registration_invitation(params[:transaction][:recipient_email], current_user, @transaction).deliver
         format.html { redirect_to @transaction, notice: 'Money successfully sent!' }
         format.json { render json: @transaction, status: :created, location: @transaction }
       else

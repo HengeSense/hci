@@ -6,9 +6,9 @@ gem "paperclip", "~> 2.7"
 gem 'aws-sdk', '~> 1.3.4'
 gem 'tlsmail'
 
-
 group :development do
   gem 'sqlite3'
+  gem 'mail_view', :git => "git://github.com/37signals/mail_view.git"
 end
 
 group :assets do

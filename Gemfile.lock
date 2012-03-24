@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/37signals/mail_view.git
+  revision: a99c2fc242fbb271a739a0934c59d4d66d3cf9c7
+  specs:
+    mail_view (1.0.1)
+      tilt
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -135,6 +142,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   devise
   jquery-rails
+  mail_view!
   paperclip (~> 2.7)
   pg
   rails (= 3.2.1)

@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
   before_create :setBalance
+  after_create  :sendConfirmation
+  after_create  :checkInvoices
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -61,5 +63,17 @@ class User < ActiveRecord::Base
   private
     def setBalance
       self.balance = 500.00
+    end
+    
+    def sendConfirmation
+      UserMailer.registration_confirmation(self).deliver
+    end
+    
+    def checkInvoices
+      if self.invoices.count > 0
+        self.invoices.each do |t|
+          self.increaseBalance(t.amount)
+        end
+      end
     end
 end

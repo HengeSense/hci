@@ -20,7 +20,9 @@ Hci::Application.routes.draw do
   
   resources :users, :only => [:show, :index, :edit]
   
-
+  if Rails.env.development?
+    mount UserMailer::Preview => 'mail_view'
+  end
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
