@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120311235805) do
+ActiveRecord::Schema.define(:version => 20120328215203) do
 
   create_table "merchants", :force => true do |t|
     t.string   "email",                                                :default => "", :null => false
@@ -41,6 +41,8 @@ ActiveRecord::Schema.define(:version => 20120311235805) do
     t.string   "description"
     t.datetime "created_at",                                    :null => false
     t.datetime "updated_at",                                    :null => false
+    t.integer  "sender_id"
+    t.integer  "recipient_id"
   end
 
   add_index "transactions", ["recipient_email"], :name => "index_transactions_on_recipient_email"

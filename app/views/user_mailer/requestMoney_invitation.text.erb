@@ -1,0 +1,6 @@
+<%= @sender.name %> requested $<%= @transaction.amount %> from you.
+
+Sent on <%= @transaction.created_at.to_formatted_s(:long_ordinal) %>
+Description: <%= @transaction.description %>
+
+<%= link_to "Sign In", new_user_session_url(:email => @recipientEmail) %> or <%= link_to "Sign up", new_user_registration_url(:email => @recipientEmail) %> to send this payment.

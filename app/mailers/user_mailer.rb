@@ -6,16 +6,28 @@ class UserMailer < ActionMailer::Base
     mail(:to => "#{user.name} <#{user.email}>", :subject => "Welcome to SimpleMoney")
   end
   
-  def registration_invitation(recipientEmail, sender, transaction)
+  def sendMoney_invitation(recipientEmail, sender, transaction)
     @recipientEmail = recipientEmail
     @sender = sender
     @transaction = transaction
     if @sender.avatar_file_name
       @senderAvatar = @sender.avatar.url(:small)
     else
-      @senderAvatar = 'http://severe-leaf-6733.herokuapp.com/images/medium/missing.png'
+      @senderAvatar = 'http://severe-leaf-6733.herokuapp.com/images/small/missing.png'
     end
     mail(:to => "#{recipientEmail}", :subject => "#{sender.email} sent you $#{transaction.amount}!")
+  end
+  
+  def requestMoney_invitation(recipientEmail, sender, transaction)
+    @recipientEmail = recipientEmail
+    @sender = sender
+    @transaction = transaction
+    if @sender.avatar_file_name
+      @senderAvatar = @sender.avatar.url(:small)
+    else
+      @senderAvatar = 'http://severe-leaf-6733.herokuapp.com/images/small/missing.png'
+    end
+    mail(:to => "#{recipientEmail}", :subject => "#{sender.email} requested $#{transaction.amount} from you.")
   end
   
   

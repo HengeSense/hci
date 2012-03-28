@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   before_create :setBalance
   after_create  :sendConfirmation
   after_create  :checkInvoices
+  after_create  :checkBills
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -10,8 +11,10 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :avatar, :name, :email, :password, :password_confirmation, :remember_me
   
-  has_many :bills, :class_name => 'Transaction', :foreign_key => "sender_email", :primary_key => "email"
-  has_many :invoices, :class_name => 'Transaction', :foreign_key => "recipient_email", :primary_key => "email"
+  #has_many :bills, :class_name => 'Transaction', :foreign_key => "sender_email", :primary_key => "email"
+  has_many :bills, :class_name => 'Transaction', :foreign_key => "sender_id"
+  #has_many :invoices, :class_name => 'Transaction', :foreign_key => "recipient_email", :primary_key => "email"
+  has_many :invoices, :class_name => 'Transaction', :foreign_key => "recipient_id"
   
   has_attached_file :avatar, 
                     :storage => :s3,
@@ -70,10 +73,32 @@ class User < ActiveRecord::Base
     end
     
     def checkInvoices
-      if self.invoices.count > 0
-        self.invoices.each do |t|
+      invoices = Transaction.all(:conditions => {
+        :recipient_email => self.email,
+        :complete => true
+      })
+      if invoices and invoices.count > 0
+        invoices.each do |t|
           self.increaseBalance(t.amount)
+          t.recipient_id = self.id
+          t.recipient_email = self.email
+          t.save
         end
       end
     end
+    
+    def checkBills
+      bills = Transaction.all(:conditions => {
+        :sender_email => self.email,
+        :complete => false
+      })
+      if bills and bills.count > 0
+        bills.each do |t|
+          t.sender_id = self.id
+          t.sender_email = self.email
+          t.save
+        end
+      end
+    end
+    
 end

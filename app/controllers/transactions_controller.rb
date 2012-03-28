@@ -42,8 +42,16 @@ class TransactionsController < ApplicationController
   def createInvoice
     @sender = User.find_by_email(params[:transaction][:sender_email])
     @transaction = current_user.invoices.build(params[:transaction])
+    @transaction.recipient_email = current_user.email
+    if @sender
+      @transaction.sender_id = @sender.id
+    end
     respond_to do |format|
       if @sender and @sender != current_user and @transaction.save
+        format.html { redirect_to @transaction, notice: 'Invoice successfully sent!' }
+        format.json { render json: @transaction, status: :created, location: @transaction }
+      elsif !@sender and @sender != current_user and @transaction.save
+        UserMailer.registration_invitation(params[:transaction][:sender_email], current_user, @transaction).deliver
         format.html { redirect_to @transaction, notice: 'Invoice successfully sent!' }
         format.json { render json: @transaction, status: :created, location: @transaction }
       else
@@ -63,6 +71,10 @@ class TransactionsController < ApplicationController
   def create
     @recipient = User.find_by_email(params[:transaction][:recipient_email])
     @transaction = current_user.bills.build(params[:transaction])
+    @transaction.sender_email = current_user.email
+    if @recipient
+      @transaction.recipient_id = @recipient.id
+    end
     @amount = params[:transaction][:amount].to_d
     logger.debug @recipient
     respond_to do |format|
@@ -73,7 +85,7 @@ class TransactionsController < ApplicationController
         format.json { render json: @transaction, status: :created, location: @transaction }
       elsif !@recipient and @recipient != current_user and @transaction.save
         current_user.decreaseBalance(@amount)
-        UserMailer.registration_invitation(params[:transaction][:recipient_email], current_user, @transaction).deliver
+        UserMailer.sendMoney_invitation(params[:transaction][:recipient_email], current_user, @transaction).deliver
         format.html { redirect_to @transaction, notice: 'Money successfully sent!' }
         format.json { render json: @transaction, status: :created, location: @transaction }
       else
