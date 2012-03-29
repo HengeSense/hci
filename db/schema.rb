@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120328215203) do
+ActiveRecord::Schema.define(:version => 20120329001010) do
 
   create_table "merchants", :force => true do |t|
     t.string   "email",                                                :default => "", :null => false
@@ -34,39 +34,39 @@ ActiveRecord::Schema.define(:version => 20120328215203) do
   add_index "merchants", ["reset_password_token"], :name => "index_merchants_on_reset_password_token", :unique => true
 
   create_table "transactions", :force => true do |t|
-    t.decimal  "amount",          :precision => 8, :scale => 2
     t.string   "sender_email"
     t.string   "recipient_email"
     t.boolean  "complete"
     t.string   "description"
-    t.datetime "created_at",                                    :null => false
-    t.datetime "updated_at",                                    :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "sender_id"
     t.integer  "recipient_id"
+    t.integer  "amount"
   end
 
   add_index "transactions", ["recipient_email"], :name => "index_transactions_on_recipient_email"
   add_index "transactions", ["sender_email"], :name => "index_transactions_on_sender_email"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                                :default => "",  :null => false
-    t.string   "encrypted_password",                                   :default => "",  :null => false
-    t.string   "name",                                                 :default => "",  :null => false
-    t.decimal  "balance",                :precision => 8, :scale => 2, :default => 0.0, :null => false
+    t.string   "email",                  :default => "", :null => false
+    t.string   "encrypted_password",     :default => "", :null => false
+    t.string   "name",                   :default => "", :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                                        :default => 0
+    t.integer  "sign_in_count",          :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                                            :null => false
-    t.datetime "updated_at",                                                            :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.integer  "balance"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

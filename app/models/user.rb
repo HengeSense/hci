@@ -65,7 +65,7 @@ class User < ActiveRecord::Base
   
   private
     def setBalance
-      self.balance = 500.00
+      self.balance = 50000
     end
     
     def sendConfirmation
