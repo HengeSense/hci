@@ -75,7 +75,7 @@ class TransactionsController < ApplicationController
     if @recipient
       @transaction.recipient_id = @recipient.id
     end
-    @amount = params[:transaction][:amount]
+    @amount = params[:transaction][:amount].to_i
     logger.debug @recipient
     respond_to do |format|
       if @recipient and @recipient != current_user and @transaction.save
@@ -101,7 +101,7 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.find(params[:id])
     @sender = User.find_by_email(@transaction.sender_email)
     @recipient = User.find_by_email(@transaction.recipient_email)
-    @amount = @transaction.amount
+    @amount = @transaction.amount.to_i
     respond_to do |format|
       if @transaction.update_attributes(params[:transaction])
         if @sender == current_user
