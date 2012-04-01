@@ -1,8 +1,10 @@
 Hci::Application.routes.draw do
+  resources :items
   resources :transactions
-  
   devise_for :users
   devise_scope :user do
+    match "/users/:id/items" => "users#createItem", :via => :post
+    
     match "/users/:id/bills" => "users#bills", :as => 'user_bills', :via => :get
     match "/users/:id/paidbills" => "users#paidBills", :as => 'user_paidbills', :via => :get
     match "/users/:id/unpaidbills" => "users#unpaidBills", :as => 'user_unpaidbills', :via => :get

@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+<div>
+  <%= image_tag @item.photo.url(:medium) %>
+</div>
+<p>
+  <b>Name:</b>
+  <%= @item.name %>
+</p>
+
+<p>
+  <b>Price:</b>
+  <%= @item.price %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @item.description %>
+</p>
+
+<p>
+  <b>Merchant:</b>
+  <%= @item.merchant_id %>
+</p>
+
+<p>
+  <b>Buyer:</b>
+  <%= @item.buyer_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_item_path(@item) %> |
+<%= link_to 'Back', items_path %>

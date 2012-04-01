@@ -14,7 +14,7 @@
   <tr>
     <td><%= user.id %></td>
     <td><%= user.email %></td>
-    <td>$<%= user.balance %></td>    
+    <td><%= user.balance.format %></td>    
     <td><%= link_to 'Show', user %></td>
     <td><%= link_to 'Edit', edit_user_registration_path(user) %></td>
     <td><%= link_to 'Destroy', users_path, confirm: 'Are you sure?', method: :delete %></td>

@@ -68,4 +68,18 @@ class UsersController < ApplicationController
     respond_with(@paidTransactions)
   end
   
+  def createItem
+    @user = User.find(params[:id])
+    @item = @user.sellable_items.build(params[:item])
+    respond_to do |format|
+      if @item.save
+        format.html { redirect_to @item, notice: 'Item was successfully created.' }
+        format.json { render json: @item, status: :created, location: @item }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @item.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  
 end

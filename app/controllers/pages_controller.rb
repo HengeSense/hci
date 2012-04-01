@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
   
-  def index
+  def index    
     @users = User.all
     @transactions = Transaction.all
     if !user_signed_in?

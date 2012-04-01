@@ -1,0 +1,34 @@
+<div class="control-group">
+  <%= i.label :photo %>
+  <div><%= i.file_field :photo %></div>
+</div>
+
+<div class="control-group">
+  <%= i.label :name %>
+  <div><%= i.text_field :name %></div>
+</div>
+
+<div class="control-group">
+  <%= i.label :description %>
+  <div><%= i.text_field :description %></div>
+</div>
+
+<div class="control-group">
+  <%= i.label :purchase_price %>
+  <div><%= i.text_field :purchase_price %></div>
+</div>
+
+<h3>Price Points</h3>
+<%= i.fields_for :price_points do |p| %>
+  <%= render "price_points_fields", :p => p %>
+<% end %>
+
+<!-- <div class="control-group">
+  <%= i.label :merchant_id %>
+  <div><%= i.number_field :merchant_id %></div>
+</div>
+
+<div class="control-group">
+  <%= i.label :buyer_id %>
+  <div><%= i.number_field :buyer_id %></div>
+</div> -->

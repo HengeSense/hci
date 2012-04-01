@@ -15,7 +15,7 @@ class UserMailer < ActionMailer::Base
     else
       @senderAvatar = 'http://severe-leaf-6733.herokuapp.com/images/small/missing.png'
     end
-    mail(:to => "#{recipientEmail}", :subject => "#{sender.email} sent you $#{transaction.amount}!")
+    mail(:to => "#{recipientEmail}", :subject => "#{sender.email} sent you #{transaction.amount.format}!")
   end
   
   def requestMoney_invitation(recipientEmail, sender, transaction)
@@ -27,7 +27,7 @@ class UserMailer < ActionMailer::Base
     else
       @senderAvatar = 'http://severe-leaf-6733.herokuapp.com/images/small/missing.png'
     end
-    mail(:to => "#{recipientEmail}", :subject => "#{sender.email} requested $#{transaction.amount} from you.")
+    mail(:to => "#{recipientEmail}", :subject => "#{sender.email} requested #{transaction.amount.format} from you.")
   end
   
   

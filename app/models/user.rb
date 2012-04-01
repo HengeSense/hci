@@ -9,13 +9,23 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :avatar, :name, :email, :password, :password_confirmation, :remember_me
+  attr_accessible :avatar, :name, :email, :password, :password_confirmation, :remember_me, :currency
   
-  #has_many :bills, :class_name => 'Transaction', :foreign_key => "sender_email", :primary_key => "email"
+  composed_of :balance,
+    :class_name => "Money",
+    :mapping => [%w(balance cents), %w(currency currency_as_string)],
+    :constructor => Proc.new { |cents, currency| Money.new(cents || 0, currency || Money.default_currency) },
+    :converter => Proc.new { |value| value.respond_to?(:to_money) ? value.to_money : raise(ArgumentError, "Can't convert #{value.class} to Money") }
+  
   has_many :bills, :class_name => 'Transaction', :foreign_key => "sender_id"
-  #has_many :invoices, :class_name => 'Transaction', :foreign_key => "recipient_email", :primary_key => "email"
+  accepts_nested_attributes_for :bills
   has_many :invoices, :class_name => 'Transaction', :foreign_key => "recipient_id"
-  
+  accepts_nested_attributes_for :invoices
+    
+  has_many :sellable_items,  :class_name => 'Item', :foreign_key => "merchant_id"
+  has_many :purchased_items, :class_name => 'Item', :foreign_key => "buyer_id"
+  accepts_nested_attributes_for :sellable_items
+    
   has_attached_file :avatar, 
                     :storage => :s3,
                     :bucket => 'simpleMoney-dev',
@@ -32,7 +42,7 @@ class User < ActiveRecord::Base
                     
   # Overriding serializable_hash to pass extra JSON we need in our iOS app
   def as_json(options = {})
-    result = super((options || {}).merge(:except => [ :avatar_updated_at, :avatar_content_type, :avatar_file_name, :avatar_file_size ]))
+    result = super((options || {}).merge(:except => [ :balance, :avatar_updated_at, :avatar_content_type, :avatar_file_name, :avatar_file_size ]))
     result[:avatar_url] = self.avatar.url(:medium)
     result[:avatar_url_small] = self.avatar.url(:small)
     a = self.invoices
@@ -43,29 +53,30 @@ class User < ActiveRecord::Base
   end
   
   def serializable_hash(options = {})
-    result = super((options || {}).merge(:except => [ :avatar_updated_at, :avatar_content_type, :avatar_file_name, :avatar_file_size ]))
+    result = super((options || {}).merge(:except => [:balance, :avatar_updated_at, :avatar_content_type, :avatar_file_name, :avatar_file_size ]))
     result[:avatar_url] = self.avatar.url(:medium)
     result[:avatar_url_small] = self.avatar.url(:small)
+    result[:balance] = self.balance.cents
     result
   end
   
   def increaseBalance(amount)
     logger.debug('increasing balance')    
-    self.balance += amount
+    self.balance = self.balance + Money.new(amount)
     logger.debug(self.balance)
     self.save
   end
   
   def decreaseBalance(amount)
     logger.debug('decreasing balance')
-    self.balance -= amount
+    self.balance = self.balance - Money.new(amount)
     logger.debug(self.balance)
     self.save
   end
   
   private
     def setBalance
-      self.balance = 50000
+      self.balance = 5000000
     end
     
     def sendConfirmation

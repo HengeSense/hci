@@ -25,6 +25,13 @@ class TransactionsController < ApplicationController
   # GET /transactions/new.json
   def new
     @transaction = current_user.bills.build
+    3.times do
+      @transaction.items.build
+    end
+    @transaction.items.each do |i|
+      i.merchant_id = current_user.id
+      i.price_points.build
+    end
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @transaction }
@@ -50,8 +57,9 @@ class TransactionsController < ApplicationController
       if @sender and @sender != current_user and @transaction.save
         format.html { redirect_to @transaction, notice: 'Invoice successfully sent!' }
         format.json { render json: @transaction, status: :created, location: @transaction }
+        UserMailer.requestMoney_invitation(params[:transaction][:sender_email], current_user, @transaction).deliver
       elsif !@sender and @sender != current_user and @transaction.save
-        UserMailer.registration_invitation(params[:transaction][:sender_email], current_user, @transaction).deliver
+        UserMailer.requestMoney_invitation(params[:transaction][:sender_email], current_user, @transaction).deliver
         format.html { redirect_to @transaction, notice: 'Invoice successfully sent!' }
         format.json { render json: @transaction, status: :created, location: @transaction }
       else
@@ -79,8 +87,45 @@ class TransactionsController < ApplicationController
     logger.debug @recipient
     respond_to do |format|
       if @recipient and @recipient != current_user and @transaction.save
+        
+        # ## -----------------------------------------
+        # ## Create Pubnub Client API (INITIALIZATION)
+        # ## -----------------------------------------
+        # puts('Creating new PubNub Client API')
+        # pubnub = Pubnub.new(
+        # publish_key   = 'pub-c-81a1ecf7-18a0-4e60-beb0-811d233028a0',
+        # subscribe_key = 'sub-c-acd74d61-7af7-11e1-b628-2706ba9f8a00',
+        # secret_key    = 'sec-c-8ecbd036-6733-495e-8e8c-64b1b01f1261',
+        # ssl_on        = false
+        # )
+        # ## ----------------------
+        # ## Send Message (PUBLISH)
+        # ## ----------------------
+        # puts('Broadcasting Message')
+        # message = { 'some_data' => 'my data here' }
+        # info    = pubnub.publish({
+        #     'channel' => 'simpleMoney',
+        #     'message' => message
+        # })
+        # 
+        # ## Publish Success?
+        # puts(info)
+        # 
+        # ## --------------------------------
+        # ## Request Past Publishes (HISTORY)
+        # ## --------------------------------
+        # puts('Requesting History')
+        # messages = pubnub.history({
+        #     'channel' => 'simpleMoney',
+        #     'limit'   => 10
+        # })
+        # 
+        # puts(messages)
+        
+        
         current_user.decreaseBalance(@amount)
         @recipient.increaseBalance(@amount)
+        UserMailer.sendMoney_invitation(params[:transaction][:recipient_email], current_user, @transaction).deliver
         format.html { redirect_to @transaction, notice: 'Money successfully sent!' }
         format.json { render json: @transaction, status: :created, location: @transaction }
       elsif !@recipient and @recipient != current_user and @transaction.save
@@ -101,7 +146,7 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.find(params[:id])
     @sender = User.find_by_email(@transaction.sender_email)
     @recipient = User.find_by_email(@transaction.recipient_email)
-    @amount = @transaction.amount.to_i
+    @amount = @transaction.amount.cents
     respond_to do |format|
       if @transaction.update_attributes(params[:transaction])
         if @sender == current_user

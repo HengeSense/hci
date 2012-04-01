@@ -5,6 +5,8 @@ gem 'devise'
 gem "paperclip", "~> 2.7"
 gem 'aws-sdk', '~> 1.3.4'
 gem 'tlsmail'
+gem 'money'
+gem "pubnub-ruby"
 
 group :development do
   gem 'sqlite3'
