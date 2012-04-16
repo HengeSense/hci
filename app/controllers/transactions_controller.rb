@@ -63,7 +63,7 @@ class TransactionsController < ApplicationController
         format.html { redirect_to @transaction, notice: 'Invoice successfully sent!' }
         format.json { render json: @transaction, status: :created, location: @transaction }
       else
-        logger.info @transaction.errors
+        logger.info @transaction.errors.as_json
         format.html { render action: "new" }
         format.json { render json: @transaction.errors, status: :unprocessable_entity }
       end
