@@ -82,4 +82,9 @@ class UsersController < ApplicationController
     end
   end
   
+  def nearbyMerchants
+    @location = Array[ params[:lat], params[:lng] ]
+    @nearby = User.where("is_merchant = ?", true).near(:origin =>@location, :within=>5)
+    respond_with(@nearby)
+  end
 end

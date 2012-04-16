@@ -10,6 +10,16 @@
   <%= @user.id %>
 </p>
 
+<p>
+  <b>is merchant?</b>
+  <%= @user.is_merchant %>
+</p>
+
+<p>
+  <b>lat/lng: </b>
+  <%= @user.latitude %>, <%= @user.longitude %>
+</p>
+
 <ul>
   <li><%= link_to "View #{@user.name}'s bills", user_bills_path %></li>
   <li><%= link_to "View #{@user.name}'s invoices", user_invoices_path %></li>

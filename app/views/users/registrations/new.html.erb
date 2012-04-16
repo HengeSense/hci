@@ -33,6 +33,24 @@
         <%= f.password_field :password_confirmation %>
       </div>
     </div>
+    <div class="control-group">
+      <%= f.label :is_merchant %>
+      <div class="controls">
+        <%= f.check_box :is_merchant %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :latitude %>
+      <div class="controls">
+        <%= f.text_field :latitude %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :longitude %>
+      <div class="controls">
+        <%= f.text_field :longitude %>
+      </div>
+    </div>
     <div>
       <%= f.submit "Sign up", :class => 'btn' %>
     </div>

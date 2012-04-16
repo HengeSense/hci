@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :avatar, :name, :email, :password, :password_confirmation, :remember_me, :currency
+  attr_accessible :avatar, :name, :email, :password, :password_confirmation, :remember_me, :currency, :address, :latitude, :longitude, :is_merchant
   
   composed_of :balance,
     :class_name => "Money",
@@ -38,6 +38,29 @@ class User < ActiveRecord::Base
                     :styles => { 
                       :medium => "150x150>", 
                       :small => "75x75>"
+                    }
+
+  scope :near, lambda{ |*args|
+                      origin = *args.first[:origin]
+                      if (origin).is_a?(Array)
+                        origin_lat, origin_lng = origin
+                      else
+                        origin_lat, origin_lng = origin.latitude, origin.longitude
+                      end
+                      origin_lat, origin_lng = origin_lat.to_f / 180.0 * Math::PI, origin_lng.to_f / 180.0 * Math::PI
+                      within = *args.first[:within]
+                      {
+                        :conditions => %(
+                          (ACOS(COS(#{origin_lat})*COS(#{origin_lng})*COS(RADIANS(users.latitude))*COS(RADIANS(users.longitude))+
+                          COS(#{origin_lat})*SIN(#{origin_lng})*COS(RADIANS(users.latitude))*SIN(RADIANS(users.longitude))+
+                          SIN(#{origin_lat})*SIN(RADIANS(users.latitude)))*3963) <= #{within}
+                        ),
+                        :select => %( users.*,
+                          (ACOS(COS(#{origin_lat})*COS(#{origin_lng})*COS(RADIANS(users.latitude))*COS(RADIANS(users.longitude))+
+                          COS(#{origin_lat})*SIN(#{origin_lng})*COS(RADIANS(users.latitude))*SIN(RADIANS(users.longitude))+
+                          SIN(#{origin_lat})*SIN(RADIANS(users.latitude)))*3963) AS distance
+                        )
+                      }
                     }
                     
   # Overriding serializable_hash to pass extra JSON we need in our iOS app
@@ -72,6 +95,10 @@ class User < ActiveRecord::Base
     self.balance = self.balance - Money.new(amount)
     logger.debug(self.balance)
     self.save
+  end
+
+  def deg2rad(degrees)
+    degrees.to_f 
   end
   
   private
