@@ -1,6 +1,6 @@
 Hci::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
-  config.logger = Logger.new(STDOUT)
+  #config.logger = Logger.new(STDOUT)
   #config.log_level = :info
   config.action_controller.asset_host = "severe-leaf-6733.herokuapp.com"
   config.action_mailer.default_url_options = { :host => 'severe-leaf-6733.herokuapp.com' }
