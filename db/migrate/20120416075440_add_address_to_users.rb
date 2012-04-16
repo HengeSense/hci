@@ -3,6 +3,6 @@ class AddAddressToUsers < ActiveRecord::Migration
     add_column :users, :address, :string
     add_column :users, :latitude, :float
     add_column :users, :longitude, :float
-    add_column :users, :is_merchant, :boolean, :default=>0
+    add_column :users, :is_merchant, :boolean, :default=>false
   end
 end
