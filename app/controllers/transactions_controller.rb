@@ -64,6 +64,9 @@ class TransactionsController < ApplicationController
         format.json { render json: @transaction, status: :created, location: @transaction }
       else
         logger.info @transaction.errors.as_json
+        logger.info @transaction.errors.blank?
+        logger.info current_user
+        logger.info @sender
         format.html { render action: "new" }
         format.json { render json: @transaction.errors, status: :unprocessable_entity }
       end
