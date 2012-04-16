@@ -69,7 +69,7 @@ class TransactionsController < ApplicationController
         logger.info current_user.email
         logger.info @sender.as_json
         format.html { render action: "new" }
-        format.json { render json: @transaction.errors, status: :unprocessable_entity }
+        format.json { render json: @transaction.errors, status: :forbidden }
       end
     end
   end
@@ -140,7 +140,7 @@ class TransactionsController < ApplicationController
         format.json { render json: @transaction, status: :created, location: @transaction }
       else
         format.html { render action: "new" }
-        format.json { render json: @transaction.errors, status: :unprocessable_entity }
+        format.json { render json: @transaction.errors, status: :forbidden }
       end
     end
   end
@@ -166,7 +166,7 @@ class TransactionsController < ApplicationController
         format.json { render json: @transaction, status: :ok }
       else
         format.html { render action: "edit" }
-        format.json { render json: @transaction.errors, status: :unprocessable_entity }
+        format.json { render json: @transaction.errors, status: :forbidden }
       end
     end
   end
