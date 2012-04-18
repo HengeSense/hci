@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :avatar, :name, :email, :password, :password_confirmation, :remember_me, :currency, :address, :latitude, :longitude, :is_merchant
+  attr_accessible :avatar, :name, :email, :password, :password_confirmation, :remember_me, :currency, :address, :latitude, :longitude, :is_merchant, :description
   
   composed_of :balance,
     :class_name => "Money",
