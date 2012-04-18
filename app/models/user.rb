@@ -53,7 +53,7 @@ class User < ActiveRecord::Base
                         :conditions => %(
                           (ACOS(COS(#{origin_lat})*COS(#{origin_lng})*COS(RADIANS(users.latitude))*COS(RADIANS(users.longitude))+
                           COS(#{origin_lat})*SIN(#{origin_lng})*COS(RADIANS(users.latitude))*SIN(RADIANS(users.longitude))+
-                          SIN(#{origin_lat})*SIN(RADIANS(users.latitude)))*3963) <= #{within}
+                          SIN(#{origin_lat})*SIN(RADIANS(users.latitude)))*3963) <= #{within[0]}
                         ),
                         :select => %( users.*,
                           (ACOS(COS(#{origin_lat})*COS(#{origin_lng})*COS(RADIANS(users.latitude))*COS(RADIANS(users.longitude))+
