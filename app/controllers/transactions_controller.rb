@@ -152,13 +152,12 @@ class TransactionsController < ApplicationController
     @sender = User.find_by_email(@transaction.sender_email)
     @recipient = User.find_by_email(@transaction.recipient_email)
     @amount = @transaction.amount.cents
+    @wasComplete = @transaction.complete
     respond_to do |format|
       if @transaction.update_attributes(params[:transaction])
-        if @sender == current_user
-          current_user.decreaseBalance(@amount)
+        if !@wasComplete && @transaction.complete
+          @sender.decreaseBalance(@amount)
           @recipient.increaseBalance(@amount)
-        elsif @sender == current_user
-          current_user.increaseBalance(@amount)
         else
           logger.debug @sender
         end
