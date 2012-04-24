@@ -92,7 +92,7 @@ class TransactionsController < ApplicationController
     logger.debug @recipient
     respond_to do |format|
       if @recipient and @recipient != current_user and @transaction.save
-        
+
         # ## -----------------------------------------
         # ## Create Pubnub Client API (INITIALIZATION)
         # ## -----------------------------------------
@@ -112,10 +112,10 @@ class TransactionsController < ApplicationController
         #     'channel' => 'simpleMoney',
         #     'message' => message
         # })
-        # 
+        #
         # ## Publish Success?
         # puts(info)
-        # 
+        #
         # ## --------------------------------
         # ## Request Past Publishes (HISTORY)
         # ## --------------------------------
@@ -124,10 +124,10 @@ class TransactionsController < ApplicationController
         #     'channel' => 'simpleMoney',
         #     'limit'   => 10
         # })
-        # 
+        #
         # puts(messages)
-        
-        
+
+
         current_user.decreaseBalance(@amount)
         @recipient.increaseBalance(@amount)
         UserMailer.sendMoney_invitation(params[:transaction][:recipient_email], current_user, @transaction).deliver
@@ -141,6 +141,69 @@ class TransactionsController < ApplicationController
       else
         format.html { render action: "new" }
         format.json { render json: @transaction.errors, status: :forbidden }
+      end
+    end
+  end
+
+
+  # POST /transactionWithRecommendation.json
+  def createAndReturnRecommendation
+    @recipient = User.find_by_email(params[:transaction][:recipient_email])
+    @transaction = current_user.bills.build(params[:transaction])
+    @recommendation = User.find("is_merchant = 1").offset(rand(Thing.count)).first
+
+    if @recipient
+      @transaction.recipient_id = @recipient.id
+    end
+    @amount = params[:transaction][:amount].to_i
+    logger.debug @recipient
+    respond_to do |format|
+      if @recipient and @recipient != current_user and @transaction.save
+
+        # ## -----------------------------------------
+        # ## Create Pubnub Client API (INITIALIZATION)
+        # ## -----------------------------------------
+        # puts('Creating new PubNub Client API')
+        # pubnub = Pubnub.new(
+        # publish_key   = 'pub-c-81a1ecf7-18a0-4e60-beb0-811d233028a0',
+        # subscribe_key = 'sub-c-acd74d61-7af7-11e1-b628-2706ba9f8a00',
+        # secret_key    = 'sec-c-8ecbd036-6733-495e-8e8c-64b1b01f1261',
+        # ssl_on        = false
+        # )
+        # ## ----------------------
+        # ## Send Message (PUBLISH)
+        # ## ----------------------
+        # puts('Broadcasting Message')
+        # message = { 'some_data' => 'my data here' }
+        # info    = pubnub.publish({
+        #     'channel' => 'simpleMoney',
+        #     'message' => message
+        # })
+        #
+        # ## Publish Success?
+        # puts(info)
+        #
+        # ## --------------------------------
+        # ## Request Past Publishes (HISTORY)
+        # ## --------------------------------
+        # puts('Requesting History')
+        # messages = pubnub.history({
+        #     'channel' => 'simpleMoney',
+        #     'limit'   => 10
+        # })
+        #
+        # puts(messages)
+
+
+        current_user.decreaseBalance(@amount)
+        @recipient.increaseBalance(@amount)
+        UserMailer.sendMoney_invitation(params[:transaction][:recipient_email], current_user, @transaction).deliver
+        format.html { redirect_to @transaction, notice: 'Money successfully sent!' }
+        format.json { render json => {:transaction => @transaction,
+                                      :recommendation => @recommendation} status: :created, location: @transaction }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @transaction.errors, status: :bad_request }
       end
     end
   end

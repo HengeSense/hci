@@ -4,25 +4,26 @@ Hci::Application.routes.draw do
   devise_for :users
   devise_scope :user do
     match "/users/:id/items" => "users#createItem", :via => :post
-    
+
     match "/users/:id/bills" => "users#bills", :as => 'user_bills', :via => :get
     match "/users/:id/paidbills" => "users#paidBills", :as => 'user_paidbills', :via => :get
     match "/users/:id/unpaidbills" => "users#unpaidBills", :as => 'user_unpaidbills', :via => :get
-    
+
     match "/users/:id/invoices" => "users#invoices", :as => 'user_invoices', :via => :get
     match "/users/:id/paidInvoices" => "users#paidInvoices", :as => 'user_paidinvoices', :via => :get
-    match "/users/:id/unpaidInvoices" => "users#unpaidInvoices", :as => 'user_unpaidinvoices', :via => :get    
-    
+    match "/users/:id/unpaidInvoices" => "users#unpaidInvoices", :as => 'user_unpaidinvoices', :via => :get
+
     match "/users/:id/unpaidTransactions" => "users#unpaidTransactions", :as => 'user_unpaidTransactions', :via => :get
     match "/users/:id/paidTransactions" => "users#paidTransactions", :as => 'user_paidTransactions', :via => :get
   end
-  
+
   match 'near/:lat/:lng' => 'users#nearbyMerchants', :constraints => { :lat => /-?[.\d]+/, :lng => /-?[.\d]+/ }, :via=> :get
   match "/invoices/new" => "transactions#newInvoice", :as => "new_invoice", :via => :get
   match "/invoices" => "transactions#createInvoice", :via => :post
+  match "/transactionWithRecommendation" => "transactions#createAndReturnRecommendation", :via => :post
 
   resources :users, :only => [:show, :index]
-  
+
   if Rails.env.development?
     mount UserMailer::Preview => 'mail_view'
   end
