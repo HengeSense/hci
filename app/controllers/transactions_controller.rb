@@ -200,7 +200,7 @@ class TransactionsController < ApplicationController
         UserMailer.sendMoney_invitation(params[:transaction][:recipient_email], current_user, @transaction).deliver
         format.html { redirect_to @transaction, notice: 'Money successfully sent!' }
         format.json { render json => {:transaction => @transaction,
-                                      :recommendation => @recommendation} status: :created, location: @transaction }
+                                      :recommendation => @recommendation}, status: :created, location: @transaction }
       else
         format.html { render action: "new" }
         format.json { render json: @transaction.errors, status: :bad_request }
