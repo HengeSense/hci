@@ -17,7 +17,7 @@ Hci::Application.routes.draw do
     match "/users/:id/paidTransactions" => "users#paidTransactions", :as => 'user_paidTransactions', :via => :get
   end
 
-  match 'near/:lat/:lng' => 'users#nearbyMerchants', :constraints => { :lat => /-?[.\d]+/, :lng => /-?[.\d]+/ }, :via=> :get
+  match '/near' => 'users#nearbyMerchants', :constraints => { :lat => /-?[.\d]+/, :lng => /-?[.\d]+/ }, :via=> :get
   match "/invoices/new" => "transactions#newInvoice", :as => "new_invoice", :via => :get
   match "/invoices" => "transactions#createInvoice", :via => :post
   match "/transactionWithRecommendation" => "transactions#createAndReturnRecommendation", :via => :post
