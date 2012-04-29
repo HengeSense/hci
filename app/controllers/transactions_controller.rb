@@ -150,7 +150,7 @@ class TransactionsController < ApplicationController
   def createAndReturnRecommendation
     @recipient = User.find_by_email(params[:transaction][:recipient_email])
     @transaction = current_user.bills.build(params[:transaction])
-    @recommendation = User.where(:is_merchant=>true).offset(rand(Thing.count)).first
+    @recommendation = User.where(:is_merchant=>true).offset(rand(User.count)).first
 
     if @recipient
       @transaction.recipient_id = @recipient.id
