@@ -199,7 +199,7 @@ class TransactionsController < ApplicationController
         @recipient.increaseBalance(@amount)
         UserMailer.sendMoney_invitation(params[:transaction][:recipient_email], current_user, @transaction).deliver
         format.html { redirect_to @transaction, notice: 'Money successfully sent!' }
-        format.json { render json => {:transaction => @transaction,
+        format.json { render :json => {:transaction => @transaction,
                                       :merchant => @recommendation,
                                       :user => @recipient}, status: :created, location: @transaction }
       else
